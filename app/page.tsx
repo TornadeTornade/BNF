@@ -14,15 +14,32 @@ import { ThemeToggle } from "@/components/bnf/theme-toggle"
 import { Sidebar } from "@/components/bnf/sidebar"
 
 export default function Page() {
+  const [auditData, setAuditData] = useState<{ masseTotale: number; top3: any[] } | null>(null)
   const [user, setUser] = useState<BnfUser | null>(null)
   const [tab, setTab] = useState<BnfTab>("dashboard")
   const [transactions, setTransactions] = useState<Transaction[]>([])
 
-  // ── 📝 REMPLACE LE BLOC EFFECT PAR CELUI-CI ──────────────────────────
+// ── 📝 BLOCS EFFECTS NETTOYÉS ET SÉPARÉS ──────────────────────────
+  
+  // 1. Gestion de l'audit public
+  useEffect(() => {
+    if (tab !== "audit") return
+    async function loadAuditData() {
+      try {
+        const res = await fetch("/api/audit")
+        if (res.ok) setAuditData(await res.json())
+      } catch (err) {
+        console.error("Erreur audit:", err)
+      }
+    }
+    loadAuditData()
+  }, [tab])
+
+  // 2. Gestion de l'historique des transactions
   useEffect(() => {
     if (!user) return
-
-    // 💡 On crée une copie fixe pour que TypeScript ne râle pas dans la fonction async
+    
+    // 💡 Copie fixe pour éviter que TypeScript ne râle dans la fonction async
     const currentUser = user 
 
     async function loadTransactions() {
@@ -121,6 +138,7 @@ export default function Page() {
     setUser(null)
     setTab("dashboard")
     setTransactions([])
+    setAuditData(null)
   }
 
   if (!user) {
@@ -155,7 +173,7 @@ export default function Page() {
         </header>
 
         <main className="mx-auto w-full max-w-md flex-1 px-5 py-6 lg:max-w-5xl lg:px-10 lg:py-10">
-          {tab === "dashboard" ? (
+          {tab === "dashboard" && (
             <div key="dashboard" className="animate-tab-in space-y-6">
               <div className="hidden lg:block">
                 <h1 className="text-2xl font-semibold tracking-tight text-foreground">
@@ -175,7 +193,8 @@ export default function Page() {
                 <TransactionList transactions={transactions} />
               </div>
             </div>
-          ) : (
+          )} {}
+          {tab === "actions" && (
             <div key="actions" className="animate-tab-in space-y-5">
               <div className="hidden lg:block">
                 <h1 className="text-2xl font-semibold tracking-tight text-foreground">
@@ -196,6 +215,47 @@ export default function Page() {
                   onSuccess={handleCashSuccess}
                 />
               </div>
+            </div>
+          )}
+
+          {tab === "audit" && (
+            <div key="audit" className="animate-tab-in space-y-6">
+              <div className="hidden lg:block">
+                <h1 className="text-2xl font-semibold tracking-tight text-foreground">Audit Public</h1>
+                <p className="mt-1 text-sm text-muted-foreground">Transparence totale et intégrité de l'économie du serveur.</p>
+              </div>
+
+              {auditData ? (
+                <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+                  <div className="rounded-2xl border border-border bg-card/50 p-6 text-center shadow-sm backdrop-blur">
+                    <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Masse Monétaire Globale</h2>
+                    <p className="text-3xl font-bold tracking-tight text-foreground font-mono">
+                      {auditData.masseTotale.toLocaleString("fr-FR")} <span className="text-lg font-medium text-muted-foreground">BNF</span>
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-3">Garantie par le registre de la Banque Nationale Friendaise.</p>
+                  </div>
+
+                  <div className="rounded-2xl border border-border bg-card/50 p-6 shadow-sm backdrop-blur">
+                    <h2 className="text-sm font-semibold tracking-tight mb-4 flex items-center gap-2">🏆 Classement d'Honneur (Top 3)</h2>
+                    <div className="space-y-2.5">
+                      {auditData.top3?.map((joueur: any, index: number) => {
+                        const medailles = ["🥇", "🥈", "🥉"]
+                        return (
+                          <div key={joueur.pseudo} className="flex items-center justify-between rounded-xl border border-border/60 bg-background px-4 py-3">
+                            <div className="flex items-center gap-3">
+                              <span className="text-xl">{medailles[index]}</span>
+                              <span className="font-medium text-sm">{joueur.pseudo}</span>
+                            </div>
+                            <span className="font-mono text-sm font-bold text-gold">{joueur.solde.toLocaleString("fr-FR")} BNF</span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground animate-pulse">Chargement des données de l'économie...</p>
+              )}
             </div>
           )}
         </main>

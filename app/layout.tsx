@@ -14,20 +14,19 @@ export const metadata: Metadata = {
   title: 'BNF — Banque Nationale Friendaise',
   description:
     'Votre banque officielle sur le serveur Minecraft. Gérez votre solde, émettez et encaissez vos chèques BNF.',
-  generator: 'v0.app',
   icons: {
     icon: [
       {
-        url: '/icon-light-32x32.png',
+        url: '/Logo_BNF.jpg',
         media: '(prefers-color-scheme: light)',
       },
       {
-        url: '/icon-dark-32x32.png',
+        url: '/Logo_BNF.jpg',
         media: '(prefers-color-scheme: dark)',
       },
       {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
+        url: '/Logo_BNF.jpg',
+        type: 'image/png',
       },
     ],
     apple: '/apple-icon.png',
@@ -56,7 +55,7 @@ export default function RootLayout({
       <body className="font-sans antialiased bg-background text-foreground" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="light"
           enableSystem={false}
           disableTransitionOnChange
         >

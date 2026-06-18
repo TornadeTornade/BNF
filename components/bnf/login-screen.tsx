@@ -14,7 +14,7 @@ import {
   UserPlus,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { BnfLogo } from "./bnf-logo"
+import { BnfLogoLogin } from "./bnf-logo"
 import { ThemeToggle } from "./theme-toggle" // Réintégré pour le confort des joueurs
 
 // 1. On garde l'interface indispensable pour le reste du site
@@ -146,7 +146,7 @@ export function LoginScreen({
           <ThemeToggle />
         </div>
         <div className="animate-tab-in relative w-full max-w-md rounded-2xl border border-border bg-card/80 p-6 text-center shadow-2xl shadow-black/40 backdrop-blur">
-          <BnfLogo showText={false} size="lg" />
+          <BnfLogoLogin showText={false} size="lg" />
           <h1 className="mt-5 text-xl font-semibold text-foreground">Compte créé avec succès !</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Conservez précieusement cette clé secrète. Elle est générée automatiquement et reste indispensable pour vous reconnecter.
@@ -200,8 +200,8 @@ export function LoginScreen({
 
       <div className="relative w-full max-w-md">
         <div className="mb-7 flex flex-col items-center text-center">
-          <BnfLogo showText={false} size="lg" />
-          <h1 className="mt-5 text-2xl font-semibold tracking-tight text-balance text-foreground">
+          <BnfLogoLogin showText={false} size="2xl" />
+          <h1 className="text-2xl font-semibold tracking-tight text-balance text-foreground">
             Banque Nationale Friendaise
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground text-pretty">
@@ -211,7 +211,7 @@ export function LoginScreen({
           </p>
         </div>
 
-        {/* Sélecteur Connexion / Création style Onglet (Ton idée de génie) */}
+        {}
         <div
           className="mb-5 grid grid-cols-2 gap-1 rounded-2xl border border-border bg-secondary/60 p-1"
           role="tablist"
